@@ -1,147 +1,187 @@
 \section{Технический проект}
 \subsection{Общая характеристика организации решения задачи}
 
-Необходимо спроектировать и разработать сайт, который должен способствовать продвижению компании на рынке.
-
-Интернет-сайт представляет собой набор взаимосвязанных электронных страниц, которые сгруппированы по разделам, содержащие текстовую, графическую, а также мультимедийную информацию (изображения, видеоролики и пр.). Сайт располагается в Интернете по определенному адресу – доменному имени сайта в виде www.имя\_сайта.ru. Каждая страница web-сайта – это текстовый документ, написанный на языке программирования (HTML, CSS, JavaScript и т.д.).
+Разрабатывается серверная часть веб-приложения для чат-платформы, обеспечивающая REST API для взаимодействия между клиентской частью и базой данных. Сервер реализует следующие основные функции:
+\begin{itemize}
+	\item Аутентификация и авторизация пользователей
+	\item Обмен сообщениями в групповых чатах
+	\item Личная переписка между пользователями
+	\item Управление группами и правами участников
+	\item Работа с вложениями и медиафайлами
+\end{itemize}
 
 \subsection{Обоснование выбора технологии проектирования}
 
-На сегодняшний день информационный рынок, поставляющий программные решения в выбранной сфере, предлагает множество продуктов, позволяющих достигнуть поставленной цели – разработки web-сайта.
+Для реализации серверной части выбраны следующие технологии:
 
-\subsubsection{Описание используемых технологий и языков программирования}
+\subsubsection{Язык программирования Python}
 
-В процессе разработки web-сайта используются программные средства и языки программирования. Каждое программное средство и каждый язык программирования применяется для круга задач, при решении которых они необходимы.
-
-\subsubsection{Язык программирования PHP}
-
-PHP – язык для написания сценариев, исполняемых на компьютере web-приложения посредством интерпретации исходного кода \cite{php}. Основное предназначение данного языка – это выполнение на сервере сценариев, создающих динамические web-страницы.
-
-\subsubsection{Язык программирования JavaScript}
-
-\paragraph{Достоинства языка JavaScript}
-
-JavaScript – объектно-ориентированный язык программирования для написания сценариев \cite{javascript}. Чаще всего JavaScript используется для написания сценариев работы с web-страницами, отображаемыми web-браузером. Web-бра\-у\-зер интерпретирует код сценария языка JavaScript, и на основе описанных в сценарии действий производит манипуляции с разметкой web-страницы. Посредством языка JavaScript реализуется возможность программирования на стороне клиента. Предоставляет возможность доступа к элементам разметки web-страницы посредством объектов. При создании сценариев на языке JavaScript приходится сталкиваться с трудностями, связанными с тем, что различные web-браузеры могут по-разному интерпретировать эти сценарии. Серьезные трудности возникают, если какой-либо из браузеров не поддерживает тот или иной объект, метод или свойство. Наиболее практичным способом решения данной проблемы является использование библиотеки jQuery. Данная библиотека реализована на языке JavaScript и расширяет возможности данного языка, нивелируя различия между браузерами.
-
-\paragraph{Недостатки языка Javascript}
-
-0 == []\ // -> true
-
-0 == \textquotedbl0\textquotedbl\ // -> true
-
-\textquotedbl0\textquotedbl\ == [] // -> false
-
-И еще:
-
-2 + \textquotedbl 2\textquotedbl\ // -> 22
-
-2 - \textquotedbl 2\textquotedbl\ // -> 0
-
-Это был пример раздела c нумерацией вида 1.1.1.1
-
-\subsection{Диаграмма компонентов и схема обмена данными между файлами компонента}
-
-Диаграмма компонентов описывает особенности физического представления разрабатываемой системы. Она позволяет определить архитектуру системы, установив зависимости между программными компонентами, в роли которых может выступать как исходный, так и исполняемый код. Основными графическими элементами диаграммы компонентов являются компоненты, интерфейсы, а также зависимости между ними. На рисунке \ref{comp:image} изображена диаграмма компонентов для проектируемой системы. Она включает в себя сервер с операционной системой, на которой установлена система управления содержимым, включающая в себя базу данных и интерфейс. Помимо этого на диаграмме изображен клиентский компьютер с операционной системой, на которой установлен браузер.
-
-\begin{figure}[ht]
-\center{\includegraphics[width=1\linewidth]{comp}}
-\caption{Диаграмма компонентов}
-\label{comp:image}
-\end{figure}
-
-Любой компонент должен быть вызван в сценарии страницы web-сайта. Web-страница передает данные компоненту в момент вызова последнего.
-
-На рисунке \ref{data:image} представлена схема обмена данными между сценариями компонента при вызове компонента на странице сайта.
-
-\begin{figure}[ht]
-\center{\includegraphics[width=1\linewidth]{data}}
-\caption{Диаграмма компонентов}
-\label{data:image}
-\end{figure}
-
-При вызове компонента в сценарии web-страницы указываются значения параметров компонента, которые далее посредством массива \$arParams передаются в сценарий файла component.php.
-
-В сценарии файла component.php посредством метода \linebreak IncludeComponentTemplate класса CBitrixComponent происходит вызов одного из шаблонов компонента. Id шаблона также определяется в сценарии страницы web-приложения и неявно для разработчика передается указанный выше метод. Подключается сценарий файла template.php одного из шаблонов, в который передается, возможно, измененный в сценарии component.php массив \$arParams и, также, сформированный в сценарии component.php массив \$arResult. Оба этих массива доступны также и в файле result\_modifier.php, который подключается перед подключением файла template.php. 
-
-Работа компонента заканчивается в момент завершения работы сценария файла component.php, т.е. возможно выполнить действия уже после подключения шаблона. Однако, если массив \$arResult будет изменен в сценарии шаблона, в сценарий файла компонента component.php измененные данные переданы не будут.
-
-\subsection{Диаграмма размещения}
-
-Диаграмма размещения (рис.~\ref{place:image}) отражает физические взаимосвязи между программными и аппаратными компонентами системы.
-
-\vspace{-8mm} % чтобы убрать пустую строку, которая осталась после переноса рисунка на следующую страницу
-\begin{figure}[ht]
-\center{\includegraphics[width=0.57\linewidth]{place}}
-\caption{Диаграмма размещения. Не помещается на страницу. Очень длинный заголовок}
-\label{place:image}
-\end{figure}
-
-Она является хорошим средством для показа маршрутов перемещения объектов и компонентов в распределенной системе.
-
-В таблице \ref{ssevsws:table} приведен пример использования пакета xltabular с автоматическим расчетом ширины столбца.
-
-\begin{xltabular}{\textwidth}{|c|X|X|}
-	\caption{Сравнение протоколов SSE и WebSocket\label{ssevsws:table}}\\ \hline
-	~  & \centrow  SSE & \centrow WebSocket \\ \hline
-	\endfirsthead
-	\continuecaption{Продолжение таблицы \ref{ssevsws:table}}
-	~ & \centrow SSE & \centrow WebSocket \\ \hline 
-	\finishhead
-	Направленность & 
-	Однонаправленный, полудуплексный: данные посылает только сервер & 
-	Двунаправленный, полнодуплексный: и сервер, и клиент могут обмениваться сообщениями \\ \hline 
-	Соединение  & HTTP & WS \\ \hline 
-	Тип данных & Только текст & Бинарные и текстовые данные \\ \hline 
-	Доп. возможности & Встроенный механизм идентификаторов событий и переподключения & Переподключение и идентификация события реализуются на стороне приложения
-\end{xltabular}
-
-\subsection{Содержание информационных блоков. Основные сущности}
-
-Проанализировав требования, можно выделить шесть основных сущностей:
+Python выбран благодаря:
 \begin{itemize}
-\item "<Новости">;
-\item "<Продукция">;
-\item "<Услуги">.
+	\item Простоте и читаемости кода
+	\item Богатой экосистеме веб-фреймворков
+	\item Хорошей поддержке работы с базами данных
+	\item Кроссплатформенности
 \end{itemize}
 
-В состав сущности "<Новости"> можно включить атрибуты, представленные в таблице \ref{news:table}.
+\subsubsection{Фреймворк WSGI}
+
+В качестве основы сервера используется WSGI (Web Server Gateway Interface) - стандартный интерфейс между веб-сервером и Python-приложениями. Преимущества:
+\begin{itemize}
+	\item Легковесность
+	\item Простота развертывания
+	\item Совместимость с различными серверами (Waitress, Gunicorn и др.)
+\end{itemize}
+
+\subsubsection{База данных SQLite}
+
+SQLite выбрана как:
+\begin{itemize}
+	\item Встроенное решение, не требующее отдельного сервера
+	\item Простое в настройке и использовании
+\end{itemize}
+
+\subsection{Диаграмма компонентов}
+
+На рисунке \ref{fig:-components} представлена архитектура серверной части приложения.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\linewidth]{"images/Диаграмма компонентов"}
+	\caption{Диаграмма компонентов серверной части}
+	\label{fig:-components}
+\end{figure}
+
+\subsection{Основные API-эндпоинты}
+
+\subsubsection{Аутентификация и пользователи}
 
 \begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
-	\caption{Атрибуты сущности "<Новости">\label{news:table}}\\ \hline
-	\centrow Поле & \centrow Тип & \centrow Обяза\-тельное & \centrow Описание \\ \hline
+	\caption{API для работы с пользователями}\label{tab:users_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
 	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
 	\endfirsthead
-	\continuecaption{Продолжение таблицы \ref{news:table}}
+	\continuecaption{Продолжение таблицы \ref{tab:users_api}}
 	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
 	\finishhead
-	\_id & ObjectId & true & Уникальный идентификатор \\ \hline 
-	head & String & true & Заголовок новости \\ \hline 
-	short & String & false & Аннотация к новости \\ \hline 
-	createdAt & Date & true & Время создания новости \\ \hline 
-	author & String & false & Автор новости \\ \hline 
-	content & String & true & Текст новости \\ \hline 
-	views & Integer & true & Количество просмотров новости зарегистрированными пользователями
+	/register & Регистрация & POST & Создание нового пользователя. Параметры: username, password \\ \hline 
+	/login & Аутентификация & POST & Вход в систему. Параметры: username, password \\ \hline 
+	/get\_user\_id & Информация & GET & Получение данных текущего пользователя \\ \hline 
 \end{xltabular}
 
-Пример использования различных типов столбцов представлен в таблице \ref{prod:table}. Рекомендуется использовать пакет xltabular для создания таблиц.
+\subsubsection{Работа с сообщениями}
 
-\begin{xltabular}{\textwidth}{|R|C{2.5cm}|l|T|}
-	\caption{Атрибуты  сущности "<Новости разметки в LaTeX"> с использованием различных типов столбцов и многострочным заголовком\label{prod:table}}\\ \hline
-	\centrow Поле & \centrow Тип & \centrow Обязательное & \centrow Описание \\ \hline
-	\centrow 1 & \centrow 2 & \thead{3} & \centrow 4 \\ \hline
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{API для работы с сообщениями}\label{tab:messages_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
 	\endfirsthead
-	\continuecaption{Продолжение таблицы \ref{prod:table}}
-	\centrow 1 & \centrow 2 & \thead{3} & \centrow 4 \\ \hline
+	\continuecaption{Продолжение таблицы \ref{tab:messages_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
 	\finishhead
-	\_id & ObjectId & true & Уникальный идентификатор \\ \hline 
-	head & String & true & Заголовок новости \\ \hline 
-	short & String & false & Аннотация к новости \\ \hline 
-	createdAt & Date & true & Время создания новости \\ \hline 
-	author & String & false & Автор новости \\ \hline 
-	content & String & true & Текст новости \\ \hline 
-	views & Integer & true & Количество просмотров новости зарегистрированными пользователями
+	/get\_messages & Получение & GET & Запрос новых сообщений. Параметры: timestamp \\ \hline 
+	/send\_message & Отправка & POST & Отправка сообщения. Параметры: message, files[] \\ \hline 
+	/delete\_message/\{id\} & Удаление & DELETE & Удаление сообщения по ID \\ \hline 
+	/edit\_message/\{id\} & Редактирование & PUT & Изменение сообщения. Параметры: message \\ \hline 
+	/check\_messages & Проверка & GET & Проверка существования сообщений. Параметры: ids[] \\ \hline 
+	/check\_edited\_messages & Проверка & GET & Поиск измененных сообщений. Параметры: last\_timestamp \\ \hline 
+\end{xltabular}
+\newpage
+\subsubsection{Групповые чаты}
+
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{API для работы с группами}\label{tab:groups_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:groups_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/create\_group & Создание & POST & Создание новой группы. Параметры: name \\ \hline 
+	/add\_to\_group & Добавление & POST & Приглашение пользователя. Параметры: group\_id, username \\ \hline 
+	/get\_groups & Список & GET & Получение групп пользователя \\ \hline 
+	/get\_group\_messages & Сообщения & GET & Получение сообщений группы. Параметры: group\_id \\ \hline 
+	/get\_group\_members & Участники & GET & Получение списка участников. Параметры: group\_id \\ \hline 
+	/leave\_group & Выход & POST & Покидание группы. Параметры: group\_id \\ \hline 
+	/change\_member\_role & Права & POST & Изменение роли. Параметры: group\_id, username, role \\ \hline 
+	/rename\_group & Переименование & POST & Изменение названия. Параметры: group\_id, new\_name \\ \hline 
+	/remove\_from\_group & Исключение & POST & Удаление участника. Параметры: group\_id, username \\ \hline 
 \end{xltabular}
 
-В системе предусмотрен внутренний механизм связи между разделами и элементами информационных блоков, поэтому введения дополнительных идентификаторов при реализации связей между сущностями не предполагается.
+\subsubsection{Личные сообщения}
 
-Экземпляры сущностей реализуются в информационных блоках посредством элементов, атрибуты сущности – посредством полей и свойств элемента. 
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{API для личных сообщений}\label{tab:private_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:private_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/send\_private\_message & Отправка & POST & Отправка ЛС. Параметры: receiver, message \\ \hline 
+	/get\_private\_messages & Получение & GET & Получение ЛС. Параметры: user, timestamp \\ \hline 
+	/get\_private\_chats & Список & GET & Получение чатов пользователя \\ \hline 
+	/search\_users & Поиск & GET & Поиск пользователей. Параметры: q \\ \hline 
+\end{xltabular}
+
+\subsection{Основные классы и функции}
+
+\subsubsection{Базовый класс View}
+
+Базовый класс для всех представлений, реализует:
+\begin{itemize}
+	\item Обработку HTTP-запросов
+	\item Чтение файлов
+	\item Формирование ответов
+\end{itemize}
+
+\subsubsection{Классы представлений}
+
+Основные классы представлений:
+\begin{itemize}
+	\item \textbf{TemplateView} - базовый класс для шаблонов
+	\item \textbf{IndexView} - главная страница
+	\item \textbf{GetMessageView} - получение сообщений
+	\item \textbf{SendMessageView} - отправка сообщений
+	\item \textbf{RegisterView/LoginView} - аутентификация
+	\item \textbf{Group-related views} - управление группами
+	\item \textbf{PrivateMessage views} - личные сообщения
+\end{itemize}
+
+\subsubsection{Вспомогательные функции}
+
+\begin{itemize}
+	\item \textbf{json\_response} - формирование JSON-ответа
+	\item \textbf{forbidden\_response} - ответ 403 Forbidden
+	\item \textbf{get\_mime} - определение MIME-типа файла
+\end{itemize}
+
+\subsection{Схема базы данных}
+
+Основные таблицы базы данных:
+\begin{itemize}
+	\item \textbf{users} - информация о пользователях
+	\item \textbf{group\_messages} - сообщения групп
+	\item \textbf{private\_messages} - личные сообщения
+	\item \textbf{groups} - информация о группах
+	\item \textbf{group\_members} - участники групп
+	\item \textbf{attachments} - вложения к сообщениям
+\end{itemize}
+
+\subsection{Безопасность}
+
+Реализованные механизмы безопасности:
+\begin{itemize}
+	\item Хеширование паролей (bcrypt)
+	\item Валидация входных данных
+	\item Проверка прав доступа
+\end{itemize}
+
+\subsection{Обработка ошибок}
+
+Реализованы специальные представления для обработки ошибок:
+\begin{itemize}
+	\item \textbf{NotFoundView} - 404 Not Found
+	\item \textbf{ForbiddenView} - 403 Forbidden
+	\item \textbf{InternalServerErrorView} - 500 Internal Server Error
+\end{itemize}
