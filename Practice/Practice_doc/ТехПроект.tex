@@ -124,6 +124,22 @@ SQLite выбрана как:
 	/search\_users & Поиск & GET & Поиск пользователей. Параметры: q \\ \hline 
 \end{xltabular}
 
+\subsubsection{Дополнительные API}
+
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{Дополнительные API эндпоинты}\label{tab:additional_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:additional_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/get\_group\_name & Информация & GET & Получение названия группы по ID \\ \hline 
+	/send\_system\_message & Системное & POST & Отправка системных сообщений \\ \hline 
+	/check\_groups\_updates & Проверка & GET & Проверка обновлений в группах \\ \hline 
+	/check\_private\_chats\_updates & Проверка & GET & Проверка новых ЛС \\ \hline 
+\end{xltabular}
+
 \subsection{Основные классы и функции}
 
 \subsubsection{Базовый класс View}
@@ -146,6 +162,10 @@ SQLite выбрана как:
 	\item \textbf{RegisterView/LoginView} - аутентификация
 	\item \textbf{Group-related views} - управление группами
 	\item \textbf{PrivateMessage views} - личные сообщения
+	\item \textbf{GetGroupNameView} - получение названия группы
+	\item \textbf{SendSystemMessageView} - системные сообщения
+	\item \textbf{CheckGroupsUpdatesView} - проверка обновлений групп
+	\item \textbf{CheckPrivateChatsUpdatesView} - проверка новых личных сообщений
 \end{itemize}
 
 \subsubsection{Вспомогательные функции}
@@ -154,6 +174,9 @@ SQLite выбрана как:
 	\item \textbf{json\_response} - формирование JSON-ответа
 	\item \textbf{forbidden\_response} - ответ 403 Forbidden
 	\item \textbf{get\_mime} - определение MIME-типа файла
+	\item \textbf{check\_group\_permissions} - проверка прав пользователя в группе
+	\item \textbf{hash\_password} - хеширование паролей
+	\item \textbf{check\_password} - проверка паролей
 \end{itemize}
 
 \subsection{Схема базы данных}

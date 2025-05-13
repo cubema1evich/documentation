@@ -12,56 +12,77 @@
 	\item Хранение истории переписки
 \end{itemize}
 
-\subsection{Этапы разработки}
-\begin{enumerate}
-	\item Реализация базового функционала:
-	\begin{itemize}
-		\item Система авторизации/регистрации
-		\item Шифрование передаваемых данных
-		\item Хранение учетных записей
-	\end{itemize}
 	
-	\item Функционал чатов:
-	\begin{itemize}
-		\item Личные сообщения
-		\item Групповые чаты
-		\item История переписки
-	\end{itemize}
-	
-	\item Дополнительные функции:
-	\begin{itemize}
-		\item Управление участниками групп
-		\item Уведомления
-		\item Прикрепление файлов
-	\end{itemize}
-	
-	\item Тестирование и отладка:
-	\begin{itemize}
-        \item Проверка безопасности
-		\item Функциональное тестирование интерфейсов
-		\item Тестирование удобства использования
-	\end{itemize}
-\end{enumerate}
+\subsection{Функционал мессенджера}
 
+\subsubsection{Аутентификация}
+\begin{itemize}
+	\item Регистрация по корпоративному email
+	\item Авторизация с проверкой учетных данных
+	\item Восстановление пароля через email
+\end{itemize}
+
+\subsubsection{Чаты и сообщения}
+\begin{itemize}
+	\item Личные сообщения между сотрудниками
+	\item Групповые чаты с управлением участниками
+	\item Отправка текстовых сообщений и файлов
+	\item Поиск по истории сообщений
+\end{itemize}
+
+\subsubsection{Управление группами}
+\begin{itemize}
+	\item Создание/удаление чатов
+	\item Добавление/исключение участников
+	\item Назначение ролей (участник, администратор)
+\end{itemize}
+
+\subsection{Роли пользователей}
+
+\begin{xltabular}{\textwidth}{|l|X|}
+	\caption{Роли пользователей}\label{tab:roles} \\ \hline
+	\centrow Роль & \centrow Права \\ \hline
+	\endfirsthead
+	Обычный пользователь & 
+	\begin{itemize}
+		\item Личная переписка
+		\item Участие в групповых чатах
+		\item Отправка сообщений и файлов
+	\end{itemize} \\ \hline
+	Администратор чата & 
+	\begin{itemize}
+		\item Все права обычного пользователя
+		\item Добавление/удаление участников
+		\item Переименование чата
+	\end{itemize} \\ \hline
+\end{xltabular}
+
+\subsubsection {Тестирование и отладка:}
+\begin{itemize}
+    \item Проверка безопасности
+	\item Функциональное тестирование интерфейсов
+	\item Тестирование удобства использования
+\end{itemize}
+\newpage
 \subsection{Требования к интерфейсу}
 
 \subsubsection{Основные элементы интерфейса}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.8\linewidth]{"images/UI макет"}
 	\caption{Схема интерфейса мессенджера}
 	\label{fig:ui-main}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.8\linewidth]{"images/UI макет регистрации"}
 	\caption{Схема интерфейса формы регистрации}
 	\label{fig:ui-reg}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.8\linewidth]{"images/UI макет авторизации"}
 	\caption{Схема интерфейса формы авторизации}
