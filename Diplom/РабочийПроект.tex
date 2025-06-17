@@ -1,56 +1,94 @@
 \section{Рабочий проект}
 \subsection{Классы, используемые при разработке сайта}
 
-Можно выделить следующий список классов и их методов, использованных при разработке web-приложения (таблица \ref{class:table}). Пример таблицы с уменьшенным межстрочным интервалом.
+Можно выделить следующий список классов и их методов, использованных при разработке web-приложения (таблицы \ref{tab:users_api} - \ref{tab:additional_api}). Пример таблицы с уменьшенным межстрочным интервалом.
 
-\renewcommand{\arraystretch}{0.8} % уменьшение расстояний до сетки таблицы
-\begin{xltabular}{\textwidth}{|X|p{2.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{4.85cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{4.85cm}|}
-\caption{Описание классов Bitrix, используемых в приложении\label{class:table}}\\
-\hline \centrow \setlength{\baselineskip}{0.7\baselineskip} Название класса & \centrow \setlength{\baselineskip}{0.7\baselineskip} Модуль, к которому относится класс & \centrow Описание класса & \centrow Методы \\
-\hline \centrow 1 & \centrow 2 & \centrow 3 & \centrow 4\\ \hline
-\endfirsthead
-\caption*{Продолжение таблицы \ref{class:table}}\\
-\hline \centrow 1 & \centrow 2 & \centrow 3 & \centrow 4\\ \hline
-\finishhead
-CMain & Главный модуль & CMain – главный класс страницы web-приложения. После одного из этапов по загрузке страницы в сценарии становится доступным инициализированный системой объект данного класса с именем \$APPLICATION & void ShowTitle(string property\_code = «title», bool strip\_tags = true)
-Выводит заголовок страницы
-void SetTitle(string title)
-Устанавливает заголовок страницы
+\subsubsection{Аутентификация и пользователи}
 
-void ShowCSS(bool external = true, bool XhtmlStyle = true)
-Выводит таблицу стилей CSS страницы\\
-\hline CFile & Главный модуль & CFile – Класс для работы с файлами и изображениями & array GetFileArray (int file\_id)
-Метод возвращает массив, содержащий описание файла (путь к файлу, имя файла, размер) с идентификатором file\_id
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{API для работы с пользователями}\label{tab:users_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:users_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/register & Регистрация & POST & Создание нового пользователя. Параметры: username, password \\ \hline 
+	/login & Аутентификация & POST & Вход в систему. Параметры: username, password \\ \hline 
+	/get\_user\_id & Информация & GET & Получение данных текущего пользователя \\ \hline 
 \end{xltabular}
-\renewcommand{\arraystretch}{1.0} % восстановление сетки
 
-\subsection{Модульное тестирование разработанного web-сайта}
+\subsubsection{Работа с сообщениями}
 
-Модульный тест для класса User из модели данных представлен на рисунке \ref{unitUser:image}.
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{API для работы с сообщениями}\label{tab:messages_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:messages_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/get\_messages & Получение & GET & Запрос новых сообщений. Параметры: timestamp \\ \hline 
+	/send\_message & Отправка & POST & Отправка сообщения. Параметры: message, files[] \\ \hline 
+	/delete\_message/\{id\} & Удаление & DELETE & Удаление сообщения по ID \\ \hline 
+	/edit\_message/\{id\} & Редактирование & PUT & Изменение сообщения. Параметры: message \\ \hline 
+	/check\_messages & Проверка & GET & Проверка существования сообщений. Параметры: ids[] \\ \hline 
+	/check\_edited\_messages & Проверка & GET & Поиск измененных сообщений. Параметры: last\_timestamp \\ \hline 
+\end{xltabular}
 
-\begin{figure}[ht]
-\begin{lstlisting}[language=Python]
-from django.test import TestCase
-from .models import *
-User = get_user_model()
+\subsubsection{Групповые чаты}
 
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{API для работы с группами}\label{tab:groups_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:groups_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/create\_group & Создание & POST & Создание новой группы. Параметры: name \\ \hline 
+	/add\_to\_group & Добавление & POST & Приглашение пользователя. Параметры: group\_id, username \\ \hline 
+	/get\_groups & Список & GET & Получение групп пользователя \\ \hline 
+	/get\_group\_messages & Сообщения & GET & Получение сообщений группы. Параметры: group\_id \\ \hline 
+	/get\_group\_members & Участники & GET & Получение списка участников. Параметры: group\_id \\ \hline 
+	/leave\_group & Выход & POST & Покидание группы. Параметры: group\_id \\ \hline 
+	/change\_member\_role & Права & POST & Изменение роли. Параметры: group\_id, username, role \\ \hline 
+	/rename\_group & Переименование & POST & Изменение названия. Параметры: group\_id, new\_name \\ \hline 
+	/remove\_from\_group & Исключение & POST & Удаление участника. Параметры: group\_id, username \\ \hline 
+\end{xltabular}
 
-class ShpoTestCases(TestCase):
+\subsubsection{Личные сообщения}
 
-    def setUp(self) -> None:
-        self.user = User.objects.create(username='testtestovich', password='testtestovich', first_name='Sad', last_name='')
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{API для личных сообщений}\label{tab:private_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:private_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/send\_private\_message & Отправка & POST & Отправка ЛС. Параметры: receiver, message \\ \hline 
+	/get\_private\_messages & Получение & GET & Получение ЛС. Параметры: user, timestamp \\ \hline 
+	/get\_private\_chats & Список & GET & Получение чатов пользователя \\ \hline 
+	/search\_users & Поиск & GET & Поиск пользователей. Параметры: q \\ \hline 
+\end{xltabular}
 
-    def test_2(self):
+\subsubsection{Дополнительные API}
 
-        self.assertEqual(self.user.first_name, 'Sad')
-        self.assertEqual(self.user.last_name, 'Cat')
-        print((self.user))
-        print((self.user.first_name))
-        print((self.user.last_name))
-\end{lstlisting}  
-\caption{Модульный тест класса User}
-\label{unitUser:image}
-\end{figure}
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{Дополнительные API эндпоинты}\label{tab:additional_api} \\ \hline
+	\centrow Поле & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:additional_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	/get\_group\_name & Информация & GET & Получение названия группы по ID \\ \hline 
+	/send\_system\_message & Системное & POST & Отправка системных сообщений \\ \hline 
+	/check\_groups\_updates & Проверка & GET & Проверка обновлений в группах \\ \hline 
+	/check\_private\_chats\_updates & Проверка & GET & Проверка новых ЛС \\ \hline 
+\end{xltabular}
+
 
 \subsection{Системное тестирование разработанного web-сайта}
 
