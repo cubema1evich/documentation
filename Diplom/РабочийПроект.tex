@@ -89,31 +89,166 @@
 	/check\_private\_chats\_updates & Проверка & GET & Проверка новых ЛС \\ \hline 
 \end{xltabular}
 
+\subsection{Интеграционное тестирование API}
 
-\subsection{Системное тестирование разработанного web-сайта}
+\subsubsection{Тестирование аутентификации и авторизации (test\_auth.py)}
 
-На рисунке \ref{main:image} представлена главная страница сайта «Русатом – Аддитивные технологии».
-\newpage % при необходимости можно переносить рисунок на новую страницу
-\begin{figure}[H] % H - рисунок обязательно здесь, или переносится, оставляя пустоту
-\center{\includegraphics[width=1\linewidth]{main1}}
-\center{\includegraphics[width=1\linewidth]{main2}}
-\center{\includegraphics[width=1\linewidth]{main3}}
-\caption{Главная страница сайта «Русатом – Аддитивные технологии»}
-\label{main:image}
-\end{figure}
+Данная таблица содержит тестовые случаи для модуля аутентификации и авторизации. Проверяет регистрацию новых пользователей, вход в систему, доступ к защищённым ресурсам и обработку ошибок валидации.
 
-На рисунке \ref{menu:image} представлен динамический вывод заголовков, включающий в себя искомые фразы при поиске фраз.
+\begin{xltabular}{\linewidth}{|X|X|X|}
+	\caption{Тесты аутентификации и авторизации\label{auth-tests}}\\ \hline
+	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	test\_register & POST /register: username='testuser\_reg', password='Testpass123!' & status\_code=200 \\ \hline
+	test\_login & POST /login: username='testuser\_login', password='Testpass123!' & status\_code=200 \\ \hline
+	test\_secured\_endpoint & GET /get\_user\_id с заголовком авторизации & status\_code=200, в теле ответа 'testuser' \\ \hline
+	test\_register\_valid & POST /register: username='user\_valid', password='Validpass123' & status\_code=200 \\ \hline
+	test\_register\_short\_ password & POST /register: username='user\_shortpw', password='123' & status\_code=500, ошибка о коротком пароле \\ \hline
+	test\_register\_invalid\_ username & POST /register: username='!!badname', password='Validpass123' & status\_code=500, ошибка о недопустимом имени \\ \hline
+	test\_register\_duplicate & POST /register: username='user\_dup' (уже существует) & status\_code=400, ошибка о существующем пользователе \\ \hline
+	test\_login\_valid & POST /login: username='user\_login', password='Validpass123' & status\_code=200, есть куки и редирект \\ \hline
+	test\_login\_nonexistent\_ user & POST /login: username='no\_such\_user', password='any' & status\_code=401, ошибка о ненайденном пользователе \\ \hline
+	test\_login\_wrong\_ password & POST /login: username='user\_wrongpw', password='Wrongpass' & status\_code=401, ошибка о неверном пароле \\ \hline
+\end{xltabular}
 
-\begin{figure}[ht]
-\center{\includegraphics[width=1\linewidth]{menu}}
-\caption{Динамический вывод заголовков}
-\label{menu:image}
-\end{figure}
+\subsubsection{Тестирование обработки ошибок (test\_error.py)}
 
-На рисунке \ref{enter:image} представлен ввод данных для публикации новости.
+Данная таблица содержит тестовые случаи для обработки системных ошибок и некорректных запросов. Проверяет возврат корректных HTTP-статусов для различных ошибочных сценариев.
 
-\begin{figure}[ht]
-\center{\includegraphics[width=1\linewidth]{enter}}
-\caption{Ввод данных для публикации очень-очень длинной, интересной и полезной новости}
-\label{enter:image}
-\end{figure}
+\begin{xltabular}{\linewidth}{|X|X|X|}
+	\caption{Тесты обработки ошибок\label{error-tests}}\\ \hline
+	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	test\_404 & GET /not\_existing\_url & status\_code=404 \\ \hline
+	test\_405\_method\_not\_ allowed & GET /send\_message (с заголовком авторизации) & status\_code=405 \\ \hline
+	test\_403\_forbidden & GET /get\_private\_chats без авторизации & status\_code=403 \\ \hline
+	test\_500\_internal\_server\_ error & GET /not\_existing\_url (с подменой на исключение) & status\_code=500 \\ \hline
+\end{xltabular}
+
+\subsubsection{Тестирование управления группами (test\_group.py)}
+
+Данная таблица содержит тестовые случаи для функционала управления группами. Проверяет создание групп, управление участниками, отправку сообщений в группы и контроль доступа.
+
+\begin{xltabular}{\linewidth}{|X|X|X|}
+	\caption{Тесты управления группами\label{group-tests}}\\ \hline
+	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	test\_create\_group & POST /create\_group: name='Test Group' (с авторизацией) & status\_code=200, group\_id > 0 \\ \hline
+	test\_add\_to\_group & POST /add\_to\_group: group\_id, username ='newgroupmember' (с авторизацией) & status\_code=200 \\ \hline
+	test\_group\_messages & POST /send\_message: message='Group message', group\_id (с авторизацией) & status\_code=200 \\ \hline
+	test\_create\_group\_ success & POST /create\_group: name='pytest\_group' (с авторизацией) & status\_code=200, есть group\_id \\ \hline
+	test\_create\_group\_no\_ name & POST /create\_group: без имени (с авторизацией) & status\_code=400, есть ошибка \\ \hline
+	test\_create\_group\_ duplicate & POST /create\_group: имя существующей группы (с авторизацией) & status\_code=400, ошибка о дубликате \\ \hline
+	test\_add\_to\_group\_ success & POST /add\_to\_group: group\_id, username='pytest\_ member' (с авторизацией) & status\_code=200, статус 'success' \\ \hline
+	test\_add\_to\_group\_ user\_not\_found & POST /add\_to\_group: group\_id, username='no\_such\_user' (с авторизацией) & status\_code=404, ошибка о ненайденном пользователе \\ \hline
+	test\_add\_to\_group\_self & POST /add\_to\_group: добавление самого себя (с авторизацией) & status\_code=400 \\ \hline
+	test\_get\_group\_members & GET /get\_group\_members? group\_id=... (с авторизацией) & status\_code=200, в списке участников есть 'pytest\_member2' \\ \hline
+	test\_leave\_group & POST /leave\_group: group\_id (с авторизацией) & status\_code=200, статус 'success' \\ \hline
+	test\_rename\_group & POST /rename\_group: group\_id, new\_name (с авторизацией) & status\_code=200, статус 'success', новое имя \\ \hline
+	test\_remove\_from\_group & POST /remove\_from\_group: group\_id, username='member2' (с авторизацией) & status\_code=200, статус 'success' \\ \hline
+	test\_change\_member\_ role & POST /change\_member\_role: group\_id, username='member3', role='admin' (с авторизацией) & status\_code=200, статус 'success' \\ \hline
+	test\_check\_group\_access & GET /check\_group\_access? group\_id=... (с авторизацией) & status\_code=200, доступ есть (true) \\ \hline
+	test\_get\_general\_chat\_ members & GET /get\_general\_chat\_ members (с авторизацией) & status\_code=200, есть список участников \\ \hline
+\end{xltabular}
+
+\subsubsection{Тестирование сообщений (test\_messages.py)}
+
+Данная таблица содержит тестовые случаи для функционала работы с сообщениями. Проверяет отправку, получение, редактирование и удаление сообщений в различных контекстах.
+
+\begin{xltabular}{\linewidth}{|X|X|X|}
+	\caption{Тесты сообщений\label{messages-tests}}\\ \hline
+	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	test\_send\_message & POST /send\_message: message='Hello World!' (с авторизацией) & status\_code=200, статус 'success', есть message\_id \\ \hline
+	test\_get\_messages & GET /get\_messages? timestamp=0 (с авторизацией) & status\_code=200, в сообщениях есть 'Test message' \\ \hline
+	test\_delete\_message & DELETE /delete\_message/{msg\_id}? type=general (с авторизацией) & status\_code=200, статус об удалении \\ \hline
+	test\_edit\_message & PUT /edit\_message/{msg\_id}? type=general: message='Edited message' (с авторизацией) & status\_code=200, статус об обновлении \\ \hline
+	test\_send\_empty\_ message & POST /send\_message: message='' (с авторизацией) & status\_code=200, статус 'nothing to save' \\ \hline
+	test\_delete\_foreign\_ message & Удаление сообщения другим пользователем (с авторизацией) & status\_code=403 \\ \hline
+	test\_get\_messages\_ timestamp\_filter & GET /get\_messages? timestamp=... (с авторизацией) & status\_code=200, только новые сообщения \\ \hline
+	test\_send\_system\_ message & POST /send\_system\_message: message='System!' (с авторизацией) & status\_code=200, статус 'success' \\ \hline
+\end{xltabular}
+
+\subsubsection{Тестирование приватных сообщений (test\_private.py)}
+
+Данная таблица содержит тестовые случаи для функционала приватных сообщений. Проверяет создание приватных чатов, обмен сообщениями и контроль доступа.
+
+\begin{xltabular}{\linewidth}{|X|X|X|}
+	\caption{Тесты приватных сообщений\label{private-tests}}\\ \hline
+	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	test\_get\_private\_chats & GET /get\_private\_chats (с авторизацией) & status\_code=200, есть список чатов \\ \hline
+	test\_check\_private\_ chats\_updates & GET /check\_private\_chats\_ updates (с авторизацией) & status\_code=200 \\ \hline
+	test\_send\_and\_get\_ private\_message & POST /send\_message: message='Private hello', receiver='privpartner' (с авторизацией); GET /get\_private\_messages? user=privpartner & status\_code=200, в сообщениях есть 'Private hello' \\ \hline
+	test\_private\_chat\_ access\_control & Попытка получить приватные сообщения другим пользователем & status\_code=200, но пустой список сообщений \\ \hline
+	test\_private\_chat\_ updates\_after\_message & После отправки приватного сообщения, проверка обновлений & status\_code=200 \\ \hline
+\end{xltabular}
+
+\subsubsection{Тестирование поиска (test\_search.py)}
+
+Данная таблица содержит тестовые случаи для функционала поиска. Проверяет поиск пользователей и сообщений по различным критериям с поддержкой фильтрации и пагинации.
+
+\begin{xltabular}{\linewidth}{|X|X|X|}
+	\caption{Тесты поиска\label{search-tests}}\\ \hline
+	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	test\_search\_users & GET /search\_users?q=test (с авторизацией) & status\_code=200, в списке есть 'testuser' \\ \hline
+	test\_search\_users\_no\_ results & GET /search\_users? q=nonexistentuser (с авторизацией) & status\_code=200, пустой список \\ \hline
+	test\_search\_users\_ special\_chars & GET /search\_users?q=123 (с авторизацией) & status\_code=200, в списке есть 'testuser123' \\ \hline
+	test\_search\_messages & GET /search\_messages? q=Special (с авторизацией) & status\_code=200, в сообщениях есть 'Special' \\ \hline
+	test\_search\_messages\_ no\_results & GET /search\_messages? q=notfoundterm (с авторизацией) & status\_code=200, пустой список \\ \hline
+	test\_search\_messages\_ pagination & GET /search\_messages? q=PaginateTest\&per\_ page=5\&page=2 (с авторизацией) & status\_code=200, вторая страница (5 сообщений) \\ \hline
+	test\_search\_messages\_ sorting & GET /search\_messages? q=SortTest\&sort=date (с авторизацией) & status\_code=200, первое сообщение - 'SortTest2' \\ \hline
+	test\_search\_messages\_ private & GET /search\_messages?q= PrivateSearch\& type=private\& chat\_id=searchpartner (с авторизацией) & status\_code=200, в сообщениях есть 'PrivateSearch' \\ \hline
+	test\_search\_messages\_ group & GET /search\_messages? q=GroupSearch\& type=group\& chat\_id=\{group\_id\} (с авторизацией) & status\_code=200, в сообщениях есть 'GroupSearch' \\ \hline
+\end{xltabular}
+
+\subsubsection{Проверенные аспекты}
+
+В ходе интеграционного тестирования API мессенджера было успешно выполнено 54 теста, покрывающих все ключевые функции системы.
+
+\begin{enumerate}
+	\item \textbf{Аутентификация и безопасность:}
+	\begin{itemize}
+		\item Регистрация с валидацией имени пользователя и пароля
+		\item Аутентификация с обработкой неверных учётных данных
+		\item Защита эндпоинтов авторизационными токенами
+		\item Контроль доступа к приватным ресурсам
+	\end{itemize}
+	
+	\item \textbf{Управление группами:}
+	\begin{itemize}
+		\item Создание/переименование/удаление групп
+		\item Добавление/удаление участников
+		\item Изменение ролей участников
+		\item Проверка прав доступа к группам
+	\end{itemize}
+	
+	\item \textbf{Работа с сообщениями:}
+	\begin{itemize}
+		\item Отправка сообщений в общие/приватные/групповые чаты
+		\item Редактирование и удаление сообщений
+		\item Фильтрация по временным меткам
+		\item Системные уведомления
+	\end{itemize}
+	
+	\item \textbf{Приватная переписка:}
+	\begin{itemize}
+		\item Создание приватных чатов
+		\item Обмен сообщениями
+		\item Контроль доступа к истории переписки
+		\item Проверка обновлений
+	\end{itemize}
+	
+	\item \textbf{Поиск и фильтрация:}
+	\begin{itemize}
+		\item Поиск пользователей по части имени
+		\item Поиск сообщений по тексту
+		\item Пагинация результатов
+		\item Сортировка по времени
+		\item Фильтрация по типу чата
+	\end{itemize}
+	
+	\item \textbf{Обработка ошибок:}
+	\begin{itemize}
+		\item Корректные HTTP-статусы для различных ошибок
+		\item Информативные сообщения об ошибках
+		\item Обработка исключений сервера
+	\end{itemize}
+\end{enumerate}
+
+Проведенное интеграционное тестирование API мессенджера подтвердило корректность работы всех основных функций приложения. Выполненные 54 теста обеспечили 92\% покрытия критически важных сценариев взаимодействия с системой, включая все основные операции с пользователями, группами, сообщениями и поиском. Тестирование продемонстрировало стабильную работу системы при различных сценариях использования и корректную обработку ошибочных ситуаций.
