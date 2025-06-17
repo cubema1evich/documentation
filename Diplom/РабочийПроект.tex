@@ -1,7 +1,46 @@
 \section{Рабочий проект}
 \subsection{Классы, используемые при разработке сайта}
 
-Можно выделить следующий список классов и их методов, использованных при разработке web-приложения (таблицы \ref{tab:users_api} - \ref{tab:additional_api}). Пример таблицы с уменьшенным межстрочным интервалом.
+Можно выделить следующий список классов и их методов, использованных при разработке web-приложения (таблицы \ref{tab:crypto_api} - \ref{tab:additional_api}).
+
+\subsubsection{Модуль работы с сессиями}
+
+\begin{xltabular}{\textwidth}{|l|l|p{1.7cm}|X|}
+	\caption{Функции модуля session.py}\label{tab:crypto_api} \\ \hline
+	\centrow Функция & \centrow Тип & \centrow Метод & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:crypto_api}}
+	\thead{1} & \thead{2} & \centrow 3 & \centrow 4 \\ \hline
+	\finishhead
+	create\_session() & Генерация & - & Создает уникальный идентификатор сессии и 128-битный ключ. Возвращает кортеж (session\_id, key) \\ \hline
+	get\_key(session\_id) & Получение & GET & Извлекает ключ шифрования из БД по идентификатору сессии \\ \hline
+	delete\_session(session\_id) & Удаление & DELETE & Удаляет сессию и связанный ключ из БД \\ \hline
+\end{xltabular}
+
+\subsubsection{Процесс шифрования/дешифрования}
+
+\begin{xltabular}{\textwidth}{|l|X|}
+	\caption{Последовательность работы с шифрованием}\label{tab:crypto_flow} \\ \hline
+	\centrow Этап & \centrow Описание \\ \hline
+	\thead{1} & \thead{2} \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{tab:crypto_flow}}
+	\finishhead
+	1. Инициализация & При входе пользователя создается сессия (create\_session()), session\_id и ключ сохраняются в sessionStorage \\ \hline
+	2. Шифрование (сервер) & Сообщение дополняется до размера блока (pad()), шифруется AES-128 (ECB режим) и кодируется в base64 \\ \hline
+	3. Передача & Зашифрованное сообщение передается клиенту через API /get\_private\_messages \\ \hline
+	4. Дешифрование (клиент) & Клиент использует сохраненный ключ для дешифрования через CryptoJS.AES.decrypt() \\ \hline
+	5. Завершение & При выходе сессия удаляется (delete\_session()) \\ \hline
+\end{xltabular}
+
+\textbf{Особенности реализации:}
+\begin{itemize}
+	\item используется режим ECB как наиболее простой для реализации;
+	\item ключ сессии генерируется случайно (get\_random\_bytes());
+	\item сообщения дополняются по стандарту PKCS7;
+	\item все ключи хранятся только в БД и sessionStorage.
+\end{itemize}
 
 \subsubsection{Аутентификация и пользователи}
 
@@ -98,6 +137,9 @@
 \begin{xltabular}{\linewidth}{|X|X|X|}
 	\caption{Тесты аутентификации и авторизации\label{auth-tests}}\\ \hline
 	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{auth-tests}}
+	\finishhead
 	test\_register & POST /register: username='testuser\_reg', password='Testpass123!' & status\_code=200 \\ \hline
 	test\_login & POST /login: username='testuser\_login', password='Testpass123!' & status\_code=200 \\ \hline
 	test\_secured\_endpoint & GET /get\_user\_id с заголовком авторизации & status\_code=200, в теле ответа 'testuser' \\ \hline
@@ -117,6 +159,9 @@
 \begin{xltabular}{\linewidth}{|X|X|X|}
 	\caption{Тесты обработки ошибок\label{error-tests}}\\ \hline
 	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{error-tests}}
+	\finishhead
 	test\_404 & GET /not\_existing\_url & status\_code=404 \\ \hline
 	test\_405\_method\_not\_ allowed & GET /send\_message (с заголовком авторизации) & status\_code=405 \\ \hline
 	test\_403\_forbidden & GET /get\_private\_chats без авторизации & status\_code=403 \\ \hline
@@ -130,6 +175,9 @@
 \begin{xltabular}{\linewidth}{|X|X|X|}
 	\caption{Тесты управления группами\label{group-tests}}\\ \hline
 	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{group-tests}}
+	\finishhead
 	test\_create\_group & POST /create\_group: name='Test Group' (с авторизацией) & status\_code=200, group\_id > 0 \\ \hline
 	test\_add\_to\_group & POST /add\_to\_group: group\_id, username ='newgroupmember' (с авторизацией) & status\_code=200 \\ \hline
 	test\_group\_messages & POST /send\_message: message='Group message', group\_id (с авторизацией) & status\_code=200 \\ \hline
@@ -155,6 +203,9 @@
 \begin{xltabular}{\linewidth}{|X|X|X|}
 	\caption{Тесты сообщений\label{messages-tests}}\\ \hline
 	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{messages-tests}}
+	\finishhead
 	test\_send\_message & POST /send\_message: message='Hello World!' (с авторизацией) & status\_code=200, статус 'success', есть message\_id \\ \hline
 	test\_get\_messages & GET /get\_messages? timestamp=0 (с авторизацией) & status\_code=200, в сообщениях есть 'Test message' \\ \hline
 	test\_delete\_message & DELETE /delete\_message/{msg\_id}? type=general (с авторизацией) & status\_code=200, статус об удалении \\ \hline
@@ -172,6 +223,9 @@
 \begin{xltabular}{\linewidth}{|X|X|X|}
 	\caption{Тесты приватных сообщений\label{private-tests}}\\ \hline
 	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{private-tests}}
+	\finishhead
 	test\_get\_private\_chats & GET /get\_private\_chats (с авторизацией) & status\_code=200, есть список чатов \\ \hline
 	test\_check\_private\_ chats\_updates & GET /check\_private\_chats\_ updates (с авторизацией) & status\_code=200 \\ \hline
 	test\_send\_and\_get\_ private\_message & POST /send\_message: message='Private hello', receiver='privpartner' (с авторизацией); GET /get\_private\_messages? user=privpartner & status\_code=200, в сообщениях есть 'Private hello' \\ \hline
@@ -186,6 +240,9 @@
 \begin{xltabular}{\linewidth}{|X|X|X|}
 	\caption{Тесты поиска\label{search-tests}}\\ \hline
 	\centrow Название теста & \centrow Входные данные & \centrow Ожидаемый результат \\ \hline
+	\endfirsthead
+	\continuecaption{Продолжение таблицы \ref{search-tests}}
+	\finishhead
 	test\_search\_users & GET /search\_users?q=test (с авторизацией) & status\_code=200, в списке есть 'testuser' \\ \hline
 	test\_search\_users\_no\_ results & GET /search\_users? q=nonexistentuser (с авторизацией) & status\_code=200, пустой список \\ \hline
 	test\_search\_users\_ special\_chars & GET /search\_users?q=123 (с авторизацией) & status\_code=200, в списке есть 'testuser123' \\ \hline
